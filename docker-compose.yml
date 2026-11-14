@@ -1,0 +1,36 @@
+# Conjunto de replicas rs0 com 3 nos + API. Subir: docker compose up -d
+services:
+  mongo1:
+    image: mongo:8.0
+    container_name: mongo1
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports: ["27017:27017"]
+    volumes: ["dados1:/data/db"]
+  mongo2:
+    image: mongo:8.0
+    container_name: mongo2
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports: ["27018:27017"]
+    volumes: ["dados2:/data/db"]
+  mongo3:
+    image: mongo:8.0
+    container_name: mongo3
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports: ["27019:27017"]
+    volumes: ["dados3:/data/db"]
+  iniciar-replica:
+    image: mongo:8.0
+    depends_on: [mongo1, mongo2, mongo3]
+    volumes: ["./database:/scripts:ro"]
+    entrypoint: ["bash", "-c", "sleep 8 && mongosh --host mongo1 /scripts/05_replica_set_sharding.js"]
+    restart: "no"
+  api:
+    build: .
+    depends_on: [iniciar-replica]
+    environment:
+      ECOTRACK_MONGO_URI: mongodb://mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0
+    ports: ["8000:8000"]
+volumes:
+  dados1: {}
+  dados2: {}
+  dados3: {}

@@ -1,0 +1,63 @@
+"""Enumerações do domínio, espelhando os enums validados pelo JSON Schema no MongoDB."""
+
+from enum import StrEnum
+
+
+class Categoria(StrEnum):
+    COMPUTADOR = "COMPUTADOR"
+    DISPOSITIVO_MOVEL = "DISPOSITIVO_MOVEL"
+    ELETRODOMESTICO = "ELETRODOMESTICO"
+    PERIFERICO = "PERIFERICO"
+    BATERIA = "BATERIA"
+    OUTRO = "OUTRO"
+
+
+class EstadoEquipamento(StrEnum):
+    FUNCIONAL = "FUNCIONAL"
+    PARCIAL = "PARCIAL"
+    INOPERANTE = "INOPERANTE"
+    NAO_AVALIADO = "NAO_AVALIADO"
+
+
+class StatusEquipamento(StrEnum):
+    RECEBIDO = "RECEBIDO"
+    EM_TRIAGEM = "EM_TRIAGEM"
+    TRIADO = "TRIADO"
+    DESTINADO = "DESTINADO"
+
+
+class Destino(StrEnum):
+    RECONDICIONAR = "RECONDICIONAR"
+    DESMONTAR = "DESMONTAR"
+    DESCARTAR = "DESCARTAR"
+
+
+class EtapaCiclo(StrEnum):
+    COLETA = "COLETA"
+    TRIAGEM = "TRIAGEM"
+    DESCARTE = "DESCARTE"
+    RECONDICIONAMENTO = "RECONDICIONAMENTO"
+    COMERCIALIZACAO = "COMERCIALIZACAO"
+
+
+class TipoEvento(StrEnum):
+    ENTRADA = "ENTRADA"
+    SAIDA = "SAIDA"
+    SANITIZACAO = "SANITIZACAO"
+    PESAGEM = "PESAGEM"
+    DESTINACAO = "DESTINACAO"
+    EMISSAO_CERTIFICADO = "EMISSAO_CERTIFICADO"
+
+
+class FaixaBonus(StrEnum):
+    BRONZE = "BRONZE"
+    PRATA = "PRATA"
+    OURO = "OURO"
+    PLATINA = "PLATINA"
+
+
+ETAPA_POR_DESTINO: dict[Destino, EtapaCiclo] = {
+    Destino.RECONDICIONAR: EtapaCiclo.RECONDICIONAMENTO,
+    Destino.DESMONTAR: EtapaCiclo.COMERCIALIZACAO,
+    Destino.DESCARTAR: EtapaCiclo.DESCARTE,
+}

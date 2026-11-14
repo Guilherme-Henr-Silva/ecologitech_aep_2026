@@ -1,0 +1,53 @@
+[project]
+name = "ecotrack"
+version = "0.2.0"
+description = "EcoTrack - MVP de rastreabilidade e inteligencia operacional para a logistica reversa da EcoLogitech (AEP 6o semestre)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pymongo>=4.13",
+    "fastapi>=0.115",
+    "uvicorn>=0.32",
+    "pydantic>=2.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-cov>=5.0", "ruff>=0.7", "mypy>=1.13"]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B", "UP", "SIM", "C90", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]  # acentos e simbolos matematicos nos comentarios sao intencionais
+
+[tool.ruff.lint.per-file-ignores]
+"src/ecotrack/__main__.py" = ["E501"]          # linhas de saída formatada da demonstração
+"src/ecotrack/dados/exportador_js.py" = ["E501"] # trecho de JavaScript embutido
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "src"
+strict = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "ecotrack.api.*"
+disallow_untyped_decorators = false
